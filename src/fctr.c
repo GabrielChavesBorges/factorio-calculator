@@ -4,10 +4,10 @@
 
 #include "fctr.h"
 
-Item* find_item(Database* db, const char* item_name) {
-    for (size_t i = 0; i < db->item_count; i++) {
-        if (strcmp(db->items[i]->name, item_name) == 0) {
-            return db->items[i];
+Item* find_item(Database db, const char* item_name) {
+    for (size_t i = 0; i < db.item_count; i++) {
+        if (strcmp(db.items[i]->name, item_name) == 0) {
+            return db.items[i];
         }
     }
     return NULL;
