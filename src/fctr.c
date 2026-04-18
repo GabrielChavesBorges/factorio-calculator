@@ -13,23 +13,20 @@ Item* find_item(Database* db, const char* item_name) {
     return NULL;
 }
 
-void get_string_input(char** string_storage, size_t* string_length) {
-    int buffer;
+void get_string_input(char** string_storage) {
+    int buffer = ' ';
     *string_storage = NULL;
-    *string_length = 0;
+    size_t string_length = 0;
 
-    while (1) {
+    while (buffer != '\0') {
         buffer = getchar();
         if (buffer == '\n' || buffer == -1) {
-            (*string_length)++;
-            *string_storage = realloc(*string_storage, *string_length * sizeof(char));
-            (*string_storage)[*string_length - 1] = '\0';
-            break;
+            buffer = '\0';
         }
 
-        (*string_length)++;
-        *string_storage = realloc(*string_storage, *string_length * sizeof(char));
-        (*string_storage)[*string_length - 1] = buffer;
+        string_length++;
+        *string_storage = realloc(*string_storage, string_length * sizeof(char));
+        (*string_storage)[string_length - 1] = buffer;
     }
 
     return;

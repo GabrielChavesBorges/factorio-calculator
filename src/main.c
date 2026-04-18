@@ -7,18 +7,17 @@ extern Database db;
 
 int main() {
     char* target_item = NULL;
-    size_t target_item_length = 0;
-    int quantity;
+    int items_per_second;
 
     printf("Item: ");
-    get_string_input(&target_item, &target_item_length);
+    get_string_input(&target_item);
     fflush(stdout);
 
     printf("Quantity per second: ");
-    scanf("%d", &quantity);
+    scanf("%d", &items_per_second);
     fflush(stdout);
 
-    printf("Item: %s, quantity: %d", target_item, quantity);
+    // find Item
 
     return 0;
 }

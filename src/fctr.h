@@ -25,6 +25,6 @@ typedef struct {
 
 
 Item* find_item(Database* db, const char* item_name);
-void get_string_input(char** string_storage, size_t* string_length);
+void get_string_input(char** string_storage);
 
 #endif
