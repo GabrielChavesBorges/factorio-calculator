@@ -6,9 +6,9 @@
 extern Database db;
 
 int main() {
-    char* target_item_string = NULL;
+    char* target_item_name = NULL;
     printf("Item: ");
-    get_string_input(&target_item_string);
+    get_string_input(&target_item_name);
     fflush(stdout);
 
     int items_per_second;
@@ -17,14 +17,9 @@ int main() {
     fflush(stdout);
 
     // find 
-    Item* target_item;
-    target_item = find_item(db, target_item_string);
-    if (target_item == NULL) {
-        printf("Item not found.");
-        return 0;
-    }
 
-    printf("Target item: %s", target_item->name);
+    Order* tree = NULL;
+    calculate_tree(db, tree, target_item_name, items_per_second);
     
     return 0;
 }
