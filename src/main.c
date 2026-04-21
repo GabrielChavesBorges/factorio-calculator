@@ -16,9 +16,9 @@ int main() {
     scanf("%d", &items_per_second);
     fflush(stdout);
 
-    // find 
-
-    // Order tree = get_order(db, target_item_name, items_per_second);
+    Order* tree = get_order(db, target_item_name, items_per_second);
+    printf("\n\n");
+    print_order_tree(tree);
     
     return 0;
 }

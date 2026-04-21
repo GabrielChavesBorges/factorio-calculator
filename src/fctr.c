@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "fctr.h"
 
@@ -32,11 +33,33 @@ void get_string_input(char** string_storage) {
     return;
 }
 
-// void print_order_tree(Order** tree) {
-//     // TODO
+#define PRINT_ORDER_MAX_DEPTH 128
 
-//     return;
-// }
+static void print_order_tree_inner(Order* tree, const bool is_last[], size_t depth) {
+    printf("%s: %.2f\n", tree->item_name, tree->machine_qty);
+
+    for (size_t i = 0; i < tree->component_count; i++) {
+        for (size_t j = 0; j < depth; j++) {
+            printf(is_last[j] ? "     " : " |   ");
+        }
+
+        bool last_sibling = (i == tree->component_count - 1);
+        printf(last_sibling ? " `-- " : " +-- ");
+
+        if (depth > PRINT_ORDER_MAX_DEPTH - 1) {
+            return;
+        }
+        bool child_stack[PRINT_ORDER_MAX_DEPTH];
+        memcpy(child_stack, is_last, depth * sizeof(bool));
+        child_stack[depth] = last_sibling;
+        print_order_tree_inner(tree->components[i], child_stack, depth + 1);
+    }
+}
+
+void print_order_tree(Order* tree) {
+    bool is_last[PRINT_ORDER_MAX_DEPTH];
+    print_order_tree_inner(tree, is_last, 0);
+}
 
 Order* get_order(Database db, char* item_name, float item_qty) {
     Item* item = find_item(db, item_name);
@@ -56,11 +79,14 @@ Order* get_order(Database db, char* item_name, float item_qty) {
         components[i] = get_order(db, item->requirements[i].item->name, component_qty);
     }
 
-    Order* output = &(Order) {
-        .item_name = item_name,
-        .machine_qty = MACHINE_QTY,
-        .components = components
-    };
+    Order* output = malloc(sizeof(Order));
+    if (output == NULL) {
+        return NULL;
+    }
+    output->item_name = item_name;
+    output->machine_qty = MACHINE_QTY;
+    output->component_count = REQUIREMENT_COUNT;
+    output->components = components;
 
     return output;
 }

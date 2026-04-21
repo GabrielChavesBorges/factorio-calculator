@@ -27,13 +27,14 @@ typedef struct {
 typedef struct Order {
     char* item_name;
     float machine_qty;
+    size_t component_count;
     Order** components;
 } Order;
 
 
 Item* find_item(Database db, const char* item_name);
 void get_string_input(char** string_storage);
-void print_order_tree(Order** tree);
+void print_order_tree(Order* tree);
 Order* get_order(Database db, char* item_name, float item_qty);
 
 #endif
