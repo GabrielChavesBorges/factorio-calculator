@@ -32,47 +32,35 @@ void get_string_input(char** string_storage) {
     return;
 }
 
-void print_order_tree(Order** tree) {
-    // TODO
+// void print_order_tree(Order** tree) {
+//     // TODO
 
-    return;
-}
+//     return;
+// }
 
-void calculate_tree(Database db, Order* tree, char* item_name, float qty) {
-    // Find item
-    Item* target_item = find_item(db, item_name);
-    if (target_item == NULL) {
+Order* get_order(Database db, char* item_name, float item_qty) {
+    Item* item = find_item(db, item_name);
+    if (item == NULL) {
         printf("Item (%s) not found.", item_name);
-        return;
+        return NULL;
     }
 
-    // Calculate first machine_qty
+    const float ITEM_PER_MACHINE = item->batch_size / item->process_time_seconds;
+    const float MACHINE_QTY = item_qty / ITEM_PER_MACHINE;
 
-    // final item calculation: items_per_second / batch_size;
-    // total_required_qty_per_second = final_item_factories * requirement_qty
-    // total_produced_per_second_per_machine = batch_size / process_time
-    // requirement_machine_qty: total_required_qty_per_second / total_produced_per_second_per_machine
-    
-    // db, empty tree, root item name, root item qty
+    const size_t REQUIREMENT_COUNT = item->requirement_count;
+    Order** components = malloc(REQUIREMENT_COUNT * sizeof(Order));
 
+    for (size_t i = 0; i < REQUIREMENT_COUNT; i++) {
+        float component_qty = MACHINE_QTY * item->requirements[i].quantity;
+        components[i] = get_order(db, item->requirements[i].item->name, component_qty);
+    }
 
-    // 
+    Order* output = &(Order) {
+        .item_name = item_name,
+        .machine_qty = MACHINE_QTY,
+        .components = components
+    };
 
-    // calculate machine qty based on parent item
-    // float qty_per_machine = current_item->batch_size * current_item->process_time_seconds;
-    // float machine_qty = required_qty / qty_per_machine;
-    
-    // Tree tip condition
-    // if (current_item->requirement_count = 0) {
-    //     return;
-    // }
-
-    // call calculation on each requirement
-    // for (size_t i = 0; i < current_item->requirement_count; i++) {
-    //     calculation(current_item->requirements[i]->item, machine_qty * current_item->requirements[i]->quantity);
-    // }
-    
-    return;
-
-    // TODO: Figure how to store information in order tree so that it can be printed later
+    return output;
 }

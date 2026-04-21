@@ -18,8 +18,7 @@ int main() {
 
     // find 
 
-    Order* tree = NULL;
-    calculate_tree(db, tree, target_item_name, items_per_second);
+    // Order tree = get_order(db, target_item_name, items_per_second);
     
     return 0;
 }
