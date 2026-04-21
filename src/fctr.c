@@ -75,8 +75,8 @@ Order* get_order(Database db, char* item_name, float item_qty) {
     Order** components = malloc(REQUIREMENT_COUNT * sizeof(Order));
 
     for (size_t i = 0; i < REQUIREMENT_COUNT; i++) {
-        float component_qty = MACHINE_QTY * item->requirements[i].quantity;
-        components[i] = get_order(db, item->requirements[i].item->name, component_qty);
+        const float COMPONENT_QTY = MACHINE_QTY * item->requirements[i].quantity / item->process_time_seconds; 
+        components[i] = get_order(db, item->requirements[i].item->name, COMPONENT_QTY);
     }
 
     Order* output = malloc(sizeof(Order));
