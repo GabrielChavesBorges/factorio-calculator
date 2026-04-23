@@ -17,6 +17,10 @@ int main() {
     fflush(stdout);
 
     Order* tree = get_order(db, target_item_name, items_per_second);
+    if (tree == NULL) {
+        return 0;
+    }
+
     printf("\n\n");
     print_order_tree(tree);
     

@@ -64,7 +64,7 @@ void print_order_tree(Order* tree) {
 Order* get_order(Database db, char* item_name, float item_qty) {
     Item* item = find_item(db, item_name);
     if (item == NULL) {
-        printf("Item (%s) not found.", item_name);
+        printf("Item \"%s\" not found.", item_name);
         return NULL;
     }
 

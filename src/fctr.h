@@ -3,6 +3,11 @@
 
 #include <stddef.h>
 
+#define FACTORY_SPEED 1.0
+#define FURNACE_SPEED 1.0
+#define DRILL_SPEED   1.0
+#define PUMP_SPEED    1.0
+
 typedef struct Order Order;
 typedef struct Item Item;
 
