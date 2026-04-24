@@ -23,6 +23,6 @@ int main() {
 
     printf("\n\n");
     print_order_tree(tree);
-    
+
     return 0;
 }

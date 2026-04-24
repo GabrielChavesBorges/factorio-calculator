@@ -33,32 +33,36 @@ void get_string_input(char** string_storage) {
     return;
 }
 
-#define PRINT_ORDER_MAX_DEPTH 128
-
-static void print_order_tree_inner(Order* tree, const bool is_last[], size_t depth) {
+static void print_order_tree_inner(Order* tree, bool* is_depth_cleared, size_t depth) {
+    
     printf("%s: %.2f\n", tree->item_name, tree->machine_qty);
 
     for (size_t i = 0; i < tree->component_count; i++) {
         for (size_t j = 0; j < depth; j++) {
-            printf(is_last[j] ? "     " : " |   ");
+            printf(is_depth_cleared[j] ? "     " : " |   ");
         }
 
-        bool last_sibling = (i == tree->component_count - 1);
-        printf(last_sibling ? " `-- " : " +-- ");
+        bool is_last_sibling = (i == tree->component_count - 1);
+        printf(is_last_sibling ? " `-- " : " +-- ");
 
-        if (depth > PRINT_ORDER_MAX_DEPTH - 1) {
+        size_t next_depth = depth + 1;
+        bool* is_depth_cleared_copy = malloc(next_depth * sizeof(bool));
+        if (is_depth_cleared_copy == NULL) {
+            fprintf(stderr, "\n\nMalloc failed!!! Some items will be missing.\n\n");
             return;
         }
-        bool child_stack[PRINT_ORDER_MAX_DEPTH];
-        memcpy(child_stack, is_last, depth * sizeof(bool));
-        child_stack[depth] = last_sibling;
-        print_order_tree_inner(tree->components[i], child_stack, depth + 1);
+
+        memcpy(is_depth_cleared_copy, is_depth_cleared, depth * sizeof(bool));
+        is_depth_cleared_copy[depth] = is_last_sibling;
+        print_order_tree_inner(tree->components[i], is_depth_cleared_copy, next_depth);
+        free(is_depth_cleared_copy);
     }
 }
 
 void print_order_tree(Order* tree) {
-    bool is_last[PRINT_ORDER_MAX_DEPTH];
-    print_order_tree_inner(tree, is_last, 0);
+    bool* is_depth_cleared = NULL;
+    print_order_tree_inner(tree, is_depth_cleared, 0);
+    free(is_depth_cleared);
 }
 
 Order* get_order(Database db, char* item_name, float item_qty) {
